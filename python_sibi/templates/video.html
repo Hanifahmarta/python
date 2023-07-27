@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ url_for('static', filename='tribi.png') }}" type="image/x-icon">
+    <title>Tribi Text To Animation</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <style>
+        .videoPlayer {
+            height: 400px !important;
+            /* Adjust this value as needed */
+        }
+
+        .footer-hidden {
+            display: none;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay .spinner-border {
+            border-color: #8EA7E9;
+        }
+    </style>
+</head>
+
+<body class="align-items-center px-3 align-self-stretch">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid col-sm-10 col-md-10 col-lg-10 col-xl-8 ">
+            <a href="/" style="text-decoration: none; color: inherit;">
+                <div class="d-flex align-items-center justify-content-center ">
+                    <img src="{{ url_for('static', filename='tribi.png') }}" alt="Icon" class="mr-2"
+                        style="height: 54px;">
+                    <p class="fs-2 mb-0 ms-2">Tribi</p>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01"
+                aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/video">Text To Animation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/abjad">Abjad</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/imbuhan">Imbuhan</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container col-sm-10 col-xl-8">
+        <div class=" mt-4 d-flex justify-content-between">
+            <p class="fw-medium fs-4 col-md-6">Animation <i type="button" class="bi bi-info-circle"
+                    data-bs-toggle="modal" data-bs-target="#exampleModal"></i></p>
+            <a href="https://bit.ly/TribiTextToAnimation" target="_blank" rel="noopener noreferrer">
+                <button type="button" class="btn text-white" style="background-color: #8EA7E9; ">Link Survey</button>
+            </a>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4" id="exampleModalLabel">Animation</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Menggabungkan teknologi teks ke animasi dengan bahasa isyarat, memungkinkan komunikasi inklusif
+                        dengan lebih mudah dan menarik
+                    </div>
+                    <div class="modal-footer d-flex text d-flex justify-content-center">
+                        <button type="button"
+                            class="btn btn-light btn-outline-secondary focus-ring focus-ring-secondary"
+                            data-bs-dismiss="modal" style="width:100%">close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-center align-items-center px-2">
+            <video id="videoPlayer" autoplay
+                class="videoPlayer col-md-6 col-xl-6 col-lg-4 col-xxl-3 embed-responsive-item" controls
+                style="width: 100%; height: auto;">
+                <source src="{{url}}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div class="row d-flex mt-1">
+            <div class="col-md-12">
+                <div class="d-flex align-items-center">
+                    <p class="fs-5 mt-3 me-2" id="inputText">Translate SIBI: </p>
+                </div>
+            </div>
+        </div>
+
+        <form id="formButton3" action="/video" method="post">
+            <div id="inputText2" class="d-flex flex-wrap p-0 mb-5">
+            </div>
+        </form>
+
+        <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4" id="videoModalLabel">Video</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <video id="modalVideoPlayer" controls style="width: 100%; height: auto;" autoplay
+                            class="videoPlayer col-md-6 col-xl-6 col-lg-4 col-xxl-3 justify-content-center embed-responsive-item"
+                            controls style="width: 100%; height: auto;">>
+                            <source type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="modal-footer d-flex text d-flex justify-content-center">
+                        <button type="button"
+                            class="btn btn-light btn-outline-secondary focus-ring focus-ring-secondary"
+                            data-bs-dismiss="modal" style="width:100%">close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-2">
+            <br>
+        </div>
+        <footer
+            class="fixed-bottom d-flex flex-wrap p-2 px-4 border-top justify-content-center align-items-center bg-light"
+            style="border: 0; --bs-bg-opacity: .5; " id="footer">
+            <div class="col-12 col-sm-10 col-xxl-8">
+                <div id="textmungkin" class="column bg-opacity-25">
+                    <div class="input-group d-flex align-items-center">
+                        <p class="text-center m-0">Mungkin maksud Anda adalah : </p>
+                        <div class="ms-1">
+                            <button id="inputText3" class="btn text-dark bg-light-subtle"></button>
+                            <button class="btn bg-light-subtle" id="close"><i class="bi bi-x"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <form action="/video" method="post" id="formButton2">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Masukan Teks" name="word"
+                            aria-label="input" aria-describedby="button-addon2">
+                        <button class="btn" type="submit" id="button-addon2" style="background-color: #8EA7E9;"><i
+                                class="bi bi-search text-light"></i></button>
+                    </div>
+                </form>
+            </div>
+        </footer>
+
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous">
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#textmungkin').hide();
+            $('#loadingOverlay').hide();
+
+            // Common function for updating data
+            function updateData(inputValue) {
+                $.ajax({
+                    url: '/video',
+                    method: 'POST',
+                    data: {
+                        word: inputValue
+                    },
+                    beforeSend: function () {
+                        $('#loadingOverlay').show();
+                    },
+                    success: function (response) {
+                        $('#videoPlayer source').attr('src', response.url);
+                        $('#videoPlayer')[0].load();
+                        $('#videoPlayer').addClass('animate__animated animate__fadeInDown show');
+
+                        var i = 0;
+                        var inputText2 = document.getElementById('inputText2');
+                        inputText2.innerHTML = '';
+                        var interval = setInterval(function () {
+                            if (i < response.text.length) {
+                                if (response.text[i] != "idle") {
+                                    $('#inputText2').append(
+                                        '<div id="button-addon3" class="btn text-light m-1" style="background-color: #8EA7E9;">' +
+                                        response.text[i] + '</div>');
+                                }
+                                i++;
+                            } else {
+                                clearInterval(interval);
+                            }
+                        }, 0);
+                        console.log(response.recomendation.length);
+                        if (response.recomendation != 0) {
+                            console.log(response.recomendation);
+                            console.log(inputValue);
+                            $('#textmungkin').show();
+                            $('#inputText3').text(response.recomendation).show();
+                        } else {
+                            $('#textmungkin').hide();
+                        }
+                        $('input[name="word"]').val('');
+
+                        $.ajax({
+                            url: '/record',
+                            method: 'POST',
+                            data: {
+                                word: inputValue
+                            },
+                            success: function (response) {
+                                if (response.status === 'success') {
+                                    $('#data_list').append('<li>' + response.data +
+                                        '</li>');
+                                }
+                            },
+                            error: function () {
+                                alert('Terjadi kesalahan saat mengirim data.');
+                            }
+                        });
+                    },
+                    complete: function () {
+                        $('#loadingOverlay').hide();
+                        $('#button-addon2').prop('disabled', false);
+                    }
+                });
+
+
+
+            }
+
+            $('#formButton2').on('submit', function (e) {
+                $('#textmungkin').hide();
+                $('#inputText3').text('').show();
+                e.preventDefault();
+                $('#button-addon2').prop('disabled', true);
+                var inputValue = $('input[name="word"]').val();
+                $('#inputText').text("Translate SIBI: " + inputValue);
+                updateData(inputValue);
+            });
+
+            $('#inputText3').on('click', function (e) {
+                e.preventDefault();
+                var buttonText = $(this).text();
+                $('#inputText').text("Translate SIBI: " + buttonText);
+                updateData(buttonText);
+                // $('#inputText3').hide()
+                $('#textmungkin').hide();
+            });
+
+            $('#close').on('click', function () {
+                $('#textmungkin').hide();
+            });
+
+            $(document).on('click', '#button-addon3', function () {
+                var buttonText = $(this).text();
+                var videoSource = "/video_list/" + buttonText;
+                $('#modalVideoPlayer source').attr('src', videoSource);
+                $('#modalVideoPlayer')[0].load();
+                $('#videoModal').modal('show');
+            });
+
+            $('.navbar-toggler').on('click', function () {
+                $('#formButton2').toggleClass('footer-hidden');
+            });
+
+            $('#nav-close').on('click', function () {
+                $('#formButton2').removeClass('footer-hidden');
+            });
+            $('input[name="word"]').on('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    $(this).blur();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
